@@ -10,8 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 app.get("/", (req, res) => {
+
   res.json({
     message: "F4 AI Blog Platform API is running!",
   });
