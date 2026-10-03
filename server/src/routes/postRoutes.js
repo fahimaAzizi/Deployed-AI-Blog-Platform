@@ -66,5 +66,85 @@ router.get("/", async (req, res) => {
     });
   }
 });
+// Update a post
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+    const postId = Number(req.params.id);
+    const { title, content, published } = req.body;
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found.",
+      });
+    }
+
+    if (post.authorId !== req.userId) {
+      return res.status(403).json({
+        message: "You can only edit your own posts.",
+      });
+    }
+
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        title,
+        content,
+        published,
+      },
+    });
+
+    res.json({
+      message: "Post updated successfully.",
+      post: updatedPost,
+    });
+  } catch (error) {
+    console.error("Update post error:", error);
+
+    res.status(500).json({
+      message: "Something went wrong.",
+    });
+  }
+});
+
+// Delete a post
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const postId = Number(req.params.id);
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found.",
+      });
+    }
+
+    if (post.authorId !== req.userId) {
+      return res.status(403).json({
+        message: "You can only delete your own posts.",
+      });
+    }
+
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+
+    res.json({
+      message: "Post deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete post error:", error);
+
+    res.status(500).json({
+      message: "Something went wrong.",
+    });
+  }
+});
 
 module.exports = router;
