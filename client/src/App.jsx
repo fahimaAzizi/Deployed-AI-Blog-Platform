@@ -1,13 +1,21 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
-import ProtectedRoute from "./components/ProtectedRoute";
-import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
 
 function App() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -22,7 +30,7 @@ function App() {
             <>
               <span>Welcome, {user?.name}</span>
 
-              <Link to="/create-post">
+              <Link to="/create">
                 Create Post
               </Link>
 
@@ -32,8 +40,13 @@ function App() {
             </>
           ) : (
             <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link to="/login">
+                Login
+              </Link>
+
+              <Link to="/register">
+                Register
+              </Link>
             </>
           )}
         </div>
@@ -41,23 +54,35 @@ function App() {
 
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Home />}
+          />
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
           <Route
             path="/create"
-            element={<CreatePost />}
-          />
-          <Route
-            path="/edit/:id"
-            element={<EditPost />}
-          />
-          <Route path="/login" element={<Login />} />
-
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/create-post"
             element={
               <ProtectedRoute>
                 <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditPost />
               </ProtectedRoute>
             }
           />
