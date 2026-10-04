@@ -1,30 +1,64 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
+  const { user, token } = useAuth();
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/posts"
+      );
+
+      setPosts(response.data);
+    } catch (error) {
+      console.error(error);
+      setError("Could not load posts.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/posts"
-        );
-
-        setPosts(response.data);
-      } catch (error) {
-        console.error(error);
-        setError("Could not load posts.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
   }, []);
+
+  const handleDelete = async (postId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/posts/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setPosts((currentPosts) =>
+        currentPosts.filter((post) => post.id !== postId)
+      );
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+          "Could not delete the post."
+      );
+    }
+  };
 
   return (
     <div>
@@ -45,6 +79,20 @@ function Home() {
           <p>
             By {post.author?.name || "Unknown author"}
           </p>
+
+          {user?.id === post.author?.id && (
+            <div>
+              <Link to={`/edit/${post.id}`}>
+                Edit
+              </Link>
+
+              <button
+                onClick={() => handleDelete(post.id)}
+              >
+                Delete
+              </button>
+            </div>
+          )}
 
           <ReactMarkdown>
             {post.content}

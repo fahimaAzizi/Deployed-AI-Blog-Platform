@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreatePost from "./pages/CreatePost";
+import EditPost from "./pages/EditPost";
 
 function App() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -44,6 +45,10 @@ function App() {
 <Route
   path="/create"
   element={<CreatePost />}
+/>
+<Route
+  path="/edit/:id"
+  element={<EditPost />}
 />
           <Route path="/login" element={<Login />} />
 
