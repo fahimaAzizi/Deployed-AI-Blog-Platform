@@ -10,6 +10,7 @@ function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +69,7 @@ function CreatePost() {
           <textarea
             value={content}
             onChange={(event) => setContent(event.target.value)}
-            placeholder="Write your post in Markdown..."
+            placeholder="Write your post using Markdown..."
             rows="15"
             required
           />
@@ -78,7 +79,9 @@ function CreatePost() {
           <input
             type="checkbox"
             checked={published}
-            onChange={(event) => setPublished(event.target.checked)}
+            onChange={(event) =>
+              setPublished(event.target.checked)
+            }
           />
 
           Publish immediately

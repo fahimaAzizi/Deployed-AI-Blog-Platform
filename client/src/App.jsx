@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -40,7 +41,10 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-
+<Route
+  path="/create"
+  element={<CreatePost />}
+/>
           <Route path="/login" element={<Login />} />
 
           <Route path="/register" element={<Register />} />
