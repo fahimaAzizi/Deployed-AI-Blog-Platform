@@ -42,25 +42,25 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-<Route
-  path="/create"
-  element={<CreatePost />}
-/>
-<Route
-  path="/edit/:id"
-  element={<EditPost />}
-/>
+          <Route
+            path="/create"
+            element={<CreatePost />}
+          />
+          <Route
+            path="/edit/:id"
+            element={<EditPost />}
+          />
           <Route path="/login" element={<Login />} />
 
           <Route path="/register" element={<Register />} />
           <Route
-  path="/create-post"
-  element={
-    <ProtectedRoute>
-      <CreatePost />
-    </ProtectedRoute>
-  }
-/>
+            path="/create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </>
