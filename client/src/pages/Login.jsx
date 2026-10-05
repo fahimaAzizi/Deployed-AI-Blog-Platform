@@ -7,20 +7,11 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,16 +22,18 @@ function Login() {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
-        form
+        {
+          email,
+          password,
+        }
       );
 
       login(response.data.token, response.data.user);
-
       navigate("/");
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Login failed. Please try again."
+          "Could not log in."
       );
     } finally {
       setLoading(false);
@@ -48,45 +41,59 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <p className="auth-label">WELCOME BACK</p>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            required
-          />
-        </div>
+        <h1>Log in to your account</h1>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-          />
-        </div>
+        <p className="auth-description">
+          Continue writing and sharing your ideas.
+        </p>
 
-        {error && <p>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Email</label>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </div>
 
-      <p>
-        Don't have an account?{" "}
-        <Link to="/register">Create an account</Link>
-      </p>
+          <div>
+            <label>Password</label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button
+            className="auth-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Log In"}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account?{" "}
+          <Link to="/register">Create one</Link>
+        </p>
+      </div>
     </div>
   );
 }
