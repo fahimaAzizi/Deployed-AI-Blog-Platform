@@ -62,43 +62,80 @@ function Home() {
 
   return (
     <div>
-      <h1>Latest Posts</h1>
+      <section className="hero">
+        <p className="hero-label">F4 AI BLOG PLATFORM</p>
 
-      {loading && <p>Loading posts...</p>}
+        <h1>Ideas, stories, and knowledge.</h1>
 
-      {error && <p>{error}</p>}
+        <p>
+          Discover thoughtful articles and use AI to turn your
+          ideas into better blog posts.
+        </p>
 
-      {!loading && !error && posts.length === 0 && (
-        <p>No published posts yet.</p>
-      )}
+        {user && (
+          <Link className="hero-button" to="/create">
+            Write a Post
+          </Link>
+        )}
+      </section>
 
-      {posts.map((post) => (
-        <article key={post.id}>
-          <h2>{post.title}</h2>
+      <section>
+        <div className="section-heading">
+          <h2>Latest Posts</h2>
+          <span>{posts.length} published</span>
+        </div>
 
-          <p>
-            By {post.author?.name || "Unknown author"}
-          </p>
+        {loading && <p>Loading posts...</p>}
 
-          {user?.id === post.author?.id && (
-            <div>
-              <Link to={`/edit/${post.id}`}>
-                Edit
+        {error && <p className="error-message">{error}</p>}
+
+        {!loading && !error && posts.length === 0 && (
+          <div className="empty-state">
+            <h3>No published posts yet</h3>
+            <p>Be the first person to publish a story.</p>
+
+            {user && (
+              <Link to="/create">
+                Create your first post
               </Link>
+            )}
+          </div>
+        )}
 
-              <button
-                onClick={() => handleDelete(post.id)}
-              >
-                Delete
-              </button>
-            </div>
-          )}
+        <div className="post-grid">
+          {posts.map((post) => (
+            <article className="post-card" key={post.id}>
+              <div className="post-card-content">
+                <p className="post-author">
+                  By {post.author?.name || "Unknown author"}
+                </p>
 
-          <ReactMarkdown>
-            {post.content}
-          </ReactMarkdown>
-        </article>
-      ))}
+                <h3>{post.title}</h3>
+
+                <div className="post-preview">
+                  <ReactMarkdown>
+                    {post.content}
+                  </ReactMarkdown>
+                </div>
+              </div>
+
+              {user?.id === post.author?.id && (
+                <div className="post-actions">
+                  <Link to={`/edit/${post.id}`}>
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
