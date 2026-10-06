@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
 
 function EditPost() {
@@ -25,6 +26,10 @@ function EditPost() {
 
         const post = response.data;
 
+        if (post.author?.id !== token) {
+          // Ownership is checked by the backend when saving.
+        }
+
         setTitle(post.title);
         setContent(post.content);
         setPublished(post.published);
@@ -39,7 +44,7 @@ function EditPost() {
     };
 
     fetchPost();
-  }, [id]);
+  }, [id, token]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,7 +99,7 @@ function EditPost() {
         </div>
 
         <div>
-          <label>Content</label>
+          <label>Markdown Content</label>
 
           <textarea
             value={content}
@@ -102,6 +107,16 @@ function EditPost() {
             rows="15"
             required
           />
+        </div>
+
+        <div>
+          <label>Preview</label>
+
+          <div>
+            <ReactMarkdown>
+              {content || "Your Markdown preview will appear here..."}
+            </ReactMarkdown>
+          </div>
         </div>
 
         <label>
