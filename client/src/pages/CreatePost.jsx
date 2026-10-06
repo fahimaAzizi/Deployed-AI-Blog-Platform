@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
 
 function CreatePost() {
@@ -64,7 +65,7 @@ function CreatePost() {
         </div>
 
         <div>
-          <label>Content</label>
+          <label>Markdown Content</label>
 
           <textarea
             value={content}
@@ -73,6 +74,16 @@ function CreatePost() {
             rows="15"
             required
           />
+        </div>
+
+        <div>
+          <label>Preview</label>
+
+          <div>
+            <ReactMarkdown>
+              {content || "Your Markdown preview will appear here..."}
+            </ReactMarkdown>
+          </div>
         </div>
 
         <label>
