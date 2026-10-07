@@ -3,6 +3,8 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRoutes = require("./src/routes/authRoutes");
+const postRoutes = require("./src/routes/postRoutes");
+const aiRoutes = require("./src/routes/aiRoutes");
 
 const app = express();
 
@@ -11,6 +13,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
 
