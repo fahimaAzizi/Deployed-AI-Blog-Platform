@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
@@ -26,10 +26,6 @@ function EditPost() {
 
         const post = response.data;
 
-        if (post.author?.id !== token) {
-          // Ownership is checked by the backend when saving.
-        }
-
         setTitle(post.title);
         setContent(post.content);
         setPublished(post.published);
@@ -44,7 +40,7 @@ function EditPost() {
     };
 
     fetchPost();
-  }, [id, token]);
+  }, [id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -83,10 +79,19 @@ function EditPost() {
   }
 
   return (
-    <div>
-      <h1>Edit Post</h1>
+    <div className="editor-page">
+      <div className="editor-header">
+        <div>
+          <p className="auth-label">EDITOR</p>
+          <h1>Edit Post</h1>
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        <Link className="back-link" to="/">
+          ← Back to posts
+        </Link>
+      </div>
+
+      <form onSubmit={handleSubmit} className="editor-form">
         <div>
           <label>Title</label>
 
@@ -94,6 +99,7 @@ function EditPost() {
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
+            placeholder="Enter your post title"
             required
           />
         </div>
@@ -104,22 +110,26 @@ function EditPost() {
           <textarea
             value={content}
             onChange={(event) => setContent(event.target.value)}
-            rows="15"
+            placeholder="Write your post using Markdown..."
+            rows="18"
             required
           />
         </div>
 
-        <div>
-          <label>Preview</label>
+        <div className="preview-box">
+          <div className="preview-header">
+            <h3>Live Preview</h3>
+            <span>Markdown</span>
+          </div>
 
-          <div>
+          <div className="markdown-preview">
             <ReactMarkdown>
               {content || "Your Markdown preview will appear here..."}
             </ReactMarkdown>
           </div>
         </div>
 
-        <label>
+        <label className="checkbox-label">
           <input
             type="checkbox"
             checked={published}
@@ -127,13 +137,16 @@ function EditPost() {
               setPublished(event.target.checked)
             }
           />
-
           Published
         </label>
 
-        {error && <p>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
-        <button type="submit" disabled={saving}>
+        <button
+          className="save-button"
+          type="submit"
+          disabled={saving}
+        >
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </form>
