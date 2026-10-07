@@ -310,3 +310,60 @@ article p {
     grid-template-columns: 1fr;
   }
 }
+.auth-page {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card h1 {
+  margin: 8px 0;
+  font-size: 32px;
+}
+
+.auth-label {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0;
+}
+
+.auth-description {
+  color: #6b7280;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.auth-button {
+  width: 100%;
+  margin-top: 5px;
+  padding: 13px;
+  font-weight: 600;
+}
+
+.auth-footer {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 25px;
+}
+
+.auth-footer a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.error-message {
+  color: #dc2626;
+}

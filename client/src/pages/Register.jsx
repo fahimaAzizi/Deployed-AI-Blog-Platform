@@ -7,21 +7,12 @@ function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,16 +23,19 @@ function Register() {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
-        form
+        {
+          name,
+          email,
+          password,
+        }
       );
 
       login(response.data.token, response.data.user);
-
       navigate("/");
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Registration failed. Please try again."
+          "Could not create your account."
       );
     } finally {
       setLoading(false);
@@ -49,58 +43,72 @@ function Register() {
   };
 
   return (
-    <div>
-      <h1>Create Account</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <p className="auth-label">GET STARTED</p>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Enter your name"
-            required
-          />
-        </div>
+        <h1>Create your account</h1>
 
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            required
-          />
-        </div>
+        <p className="auth-description">
+          Join the F4 AI Blog Platform and start publishing.
+        </p>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="At least 6 characters"
-            required
-            minLength={6}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Name</label>
 
-        {error && <p>{error}</p>}
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Your name"
+              required
+            />
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating account..." : "Register"}
-        </button>
-      </form>
+          <div>
+            <label>Email</label>
 
-      <p>
-        Already have an account?{" "}
-        <Link to="/login">Login</Link>
-      </p>
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label>Password</label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
+              placeholder="At least 6 characters"
+              minLength="6"
+              required
+            />
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button
+            className="auth-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Already have an account?{" "}
+          <Link to="/login">Log in</Link>
+        </p>
+      </div>
     </div>
   );
 }
