@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
 
@@ -29,8 +29,8 @@ function CreatePost() {
     setSuggestions([]);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/ai/suggest-titles",
+       const response = await api.post(
+  "/api/ai/suggest-titles",
         {
           content,
         },
@@ -59,8 +59,8 @@ function CreatePost() {
     setLoading(true);
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/posts",
+      await api.post(
+       "/api/posts",
         {
           title,
           content,

@@ -38,18 +38,18 @@ function Home() {
     }
 
     try {
-     await api.delete(`/api/posts/${postId}`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
+      await api.delete(`/api/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPosts((currentPosts) =>
         currentPosts.filter((post) => post.id !== postId)
       );
     } catch (error) {
       alert(
         error.response?.data?.message ||
-          "Could not delete the post."
+        "Could not delete the post."
       );
     }
   };

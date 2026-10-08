@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
 
@@ -20,9 +20,7 @@ function EditPost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/posts/${id}`
-        );
+       const response = await api.get(`/api/posts/${id}`);
 
         const post = response.data;
 
@@ -49,8 +47,8 @@ function EditPost() {
     setError("");
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/posts/${id}`,
+     await api.put(
+  `/api/posts/${id}`,
         {
           title,
           content,
