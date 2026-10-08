@@ -12,8 +12,45 @@ function CreatePost() {
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
 
+  const [suggestions, setSuggestions] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleSuggestTitles = async () => {
+    if (!content.trim()) {
+      setError("Write some blog content first.");
+      return;
+    }
+
+    setError("");
+    setAiLoading(true);
+    setSuggestions([]);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/ai/suggest-titles",
+        {
+          content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setSuggestions(response.data.suggestions || []);
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+          "Could not generate AI suggestions."
+      );
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -77,11 +114,40 @@ function CreatePost() {
         </div>
 
         <div>
+          <button
+            type="button"
+            onClick={handleSuggestTitles}
+            disabled={aiLoading}
+          >
+            {aiLoading
+              ? "Generating titles..."
+              : "✨ Suggest Titles with AI"}
+          </button>
+        </div>
+
+        {suggestions.length > 0 && (
+          <div>
+            <h3>AI Title Suggestions</h3>
+
+            {suggestions.map((suggestion, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setTitle(suggestion)}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div>
           <label>Preview</label>
 
           <div>
             <ReactMarkdown>
-              {content || "Your Markdown preview will appear here..."}
+              {content ||
+                "Your Markdown preview will appear here..."}
             </ReactMarkdown>
           </div>
         </div>
@@ -94,7 +160,6 @@ function CreatePost() {
               setPublished(event.target.checked)
             }
           />
-
           Publish immediately
         </label>
 
