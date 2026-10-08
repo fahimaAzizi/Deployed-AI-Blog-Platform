@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,9 +13,7 @@ function Home() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/posts"
-      );
+      const response = await api.get("/api/posts");
 
       setPosts(response.data);
     } catch (error) {
@@ -40,15 +38,11 @@ function Home() {
     }
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/posts/${postId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+     await api.delete(`/api/posts/${postId}`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
       setPosts((currentPosts) =>
         currentPosts.filter((post) => post.id !== postId)
       );
